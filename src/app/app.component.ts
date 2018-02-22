@@ -3,6 +3,7 @@ import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { SQLite } from '@ionic-native/sqlite';
+import { TareasServicioProvider } from '../providers/tareas-servicio/tareas-servicio';
 
 import { HomePage } from '../pages/home/home';
 @Component({
@@ -15,6 +16,7 @@ export class MyApp {
     platform: Platform,
     statusBar: StatusBar,
     splashScreen: SplashScreen,
+    public tareasServicio: TareasServicioProvider,
     public sqlite: SQLite) {
     platform.ready().then(() => {
       statusBar.styleDefault();
@@ -30,6 +32,8 @@ export class MyApp {
     })
     .then((db) => {
       console.log(db);
+      this.tareasServicio.setDatabase(db);
+      return this.tareasServicio.crearTabla();
     })
     .catch(error =>{
       console.error(error);
