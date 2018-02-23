@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SQLiteObject } from '@ionic-native/sqlite';
 
@@ -13,6 +12,8 @@ export class TareasServicioProvider {
 
   db: SQLiteObject = null;
 
+  constructor() {}
+
   setDatabase(db: SQLiteObject){
     if(this.db === null){
       this.db = db;
@@ -20,22 +21,19 @@ export class TareasServicioProvider {
   }
 
   crearTabla(){
-    let sql = `CREATE TABLE IF NOT EXISTS tareas(id INTEGER PRIMARY KEY AUTOINCREMENT,
-                titulo TEXT, completado INTEGER)`;
+    let sql = 'CREATE TABLE IF NOT EXISTS tareas(id INTEGER PRIMARY KEY AUTOINCREMENT, titulo TEXT, completado INTEGER)';
     return this.db.executeSql(sql, []);
   }
 
   obtenerTodas(){
     let sql = 'SELECT * FROM tareas';
-    return this.db.executeSql(sql, [])
-      .then(response => {
-        let tareas = [];
-        for (let index = 0; index < response.rows.length; index++) {
-          tareas.push(response.rows.item(index));
-        }
-        return Promise.resolve( tareas );
-      })
-      .catch(error => Promise.reject(error));
+    return this.db.executeSql(sql, []).then(response => {
+      let tareas = [];
+      for (let index = 0; index < response.rows.length; index++) {
+        tareas.push( response.rows.item(index) );
+      }
+      return Promise.resolve( tareas );
+    }).catch(error => Promise.reject(error));
   }
 
   crear(tarea: any){

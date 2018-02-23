@@ -10,17 +10,16 @@ import { HomePage } from '../pages/home/home';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage:any = HomePage;
+  rootPage:any = null;
 
   constructor(
     platform: Platform,
     statusBar: StatusBar,
-    splashScreen: SplashScreen,
+    public splashScreen: SplashScreen,
     public tareasServicio: TareasServicioProvider,
     public sqlite: SQLite) {
     platform.ready().then(() => {
       statusBar.styleDefault();
-      splashScreen.hide();
       this.crearBaseDatos();
     });
   }
@@ -31,9 +30,12 @@ export class MyApp {
       location: 'default'
     })
     .then((db) => {
-      console.log(db);
       this.tareasServicio.setDatabase(db);
       return this.tareasServicio.crearTabla();
+    })
+    .then(() =>{
+      this.splashScreen.hide();
+      this.rootPage = HomePage;
     })
     .catch(error =>{
       console.error(error);
